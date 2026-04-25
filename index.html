@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>College Vidya Clone</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f5f5f5}
+
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:10px 20px;background:#fff}
+.logo-wrapper{display:flex;align-items:center;gap:10px}
+.logo{font-weight:bold;color:#1e4ed8;font-size:20px}
+.celebration{background:#ffe8cc;color:#d97706;padding:4px 8px;border-radius:6px;font-size:12px;font-weight:bold}
+.tagline{font-size:12px;color:#555}
+.ai-btn{background:#e6f4ff;color:#1e4ed8;padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:bold}
+
+.header{background:#1e4ed8;color:#fff;padding:60px 20px;display:flex;justify-content:space-between;align-items:center}
+.header-left{max-width:55%}
+.header img{width:350px;border-radius:10px}
+.header h1{font-size:40px;margin:0}
+.header p{margin-top:10px;font-size:18px}
+.tags{margin-top:20px}
+.tag{display:inline-block;background:#fff;color:#000;padding:8px 14px;border-radius:8px;margin:5px;font-size:14px}
+.btn{margin-top:20px;background:#ffcc00;color:#000;padding:12px 24px;border-radius:8px;display:inline-block;cursor:pointer;font-weight:bold}
+
+.stats{display:flex;justify-content:space-around;padding:30px;background:#fff}
+.stats div{text-align:center}
+.emoji{font-size:30px;display:block;margin-bottom:5px}
+
+.hallmarks{text-align:center;padding:30px;font-size:24px;font-weight:bold}
+
+.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center}
+.modal-content{background:#fff;width:380px;max-height:90vh;overflow-y:auto;padding:20px;border-radius:12px;position:relative}
+.close{position:absolute;top:10px;right:15px;cursor:pointer;font-size:20px}
+
+.label{font-size:14px;font-weight:bold;margin-top:10px}
+.input{width:100%;padding:12px;margin-top:6px;border:1px solid #ccc;border-radius:8px}
+.error{font-size:12px;color:red;margin-top:4px;display:none}
+
+.dropdown{position:relative}
+.dropdown-content{display:none;position:absolute;background:#fff;width:100%;border:1px solid #ccc;border-radius:8px;max-height:150px;overflow:auto;z-index:10}
+.dropdown-content div{padding:10px;cursor:pointer}
+.dropdown-content div:hover{background:#eee}
+
+.submit-btn{background:#1e4ed8;color:#fff;width:100%;padding:14px;border:none;border-radius:10px;font-size:16px;margin-top:15px;cursor:pointer}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo-wrapper">
+    <div class="logo">College Vidya</div>
+    <div class="celebration">🎉 Celebrating 1 Lakh Admissions</div>
+    <div class="tagline">#ChunoApnaSahi</div>
+  </div>
+  <div class="ai-btn" onclick="openModal()">⚡ AI-Powered Suggest in 2 Mins</div>
+</div>
+
+<div class="header" onclick="openModal()">
+<div class="header-left">
+<h1>Compare & Select From Top 100+ Online Universities</h1>
+<p>Best University = Best Placements</p>
+<div class="tags">
+<span class="tag">MBA</span>
+<span class="tag">Dual MBA</span>
+<span class="tag">MCA</span>
+<span class="tag">M.Com</span>
+<span class="tag">MA</span>
+<span class="tag">BBA</span>
+<span class="tag">BCA</span>
+<span class="tag">B.Com</span>
+<span class="tag">BA</span>
+</div>
+<div class="btn" onclick="openModal()">Compare Now</div>
+</div>
+<img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800" />
+</div>
+
+<div class="stats">
+<div><span class="emoji">😄</span><h2>1 Lakh+</h2><p>Trusted by Students</p></div>
+<div><span class="emoji">👨‍💼</span><h2>500+</h2><p>Expert Mentors</p></div>
+<div><span class="emoji">⭐</span><h2>4.8/5 (2000)</h2><p>Google Rating</p></div>
+</div>
+
+<div class="hallmarks">Hallmarks of Online Courses</div>
+
+<div class="modal" id="modal">
+<div class="modal-content">
+<span class="close" onclick="closeModal()">&times;</span>
+<h2>Compare & Select from 100+</h2>
+<p>Best University for your Top Online Course</p>
+
+<div class="label">Your Name</div>
+<input id="nameInput" class="input" placeholder="Enter your name" oninput="validateName()" />
+<div id="nameError" class="error">Name is required!</div>
+
+<div class="label">Your Email</div>
+<input id="emailInput" class="input" placeholder="Enter your email" oninput="validateEmail()" />
+<div id="emailError" class="error">Email is required!</div>
+
+<div class="label">Contact No.</div>
+<input id="phoneInput" class="input" placeholder="Enter mobile number" oninput="validatePhone()" />
+<div id="phoneError" class="error">Mobile no. is required!</div>
+
+<div class="label">Select Course</div>
+<div class="dropdown">
+<input id="courseInput" class="input" placeholder="Select Course" onclick="toggleDropdown('courseDropdown')" readonly />
+<div class="dropdown-content" id="courseDropdown">
+<div onclick="selectOption('courseDropdown','courseInput',this.innerText)">Online MBA</div>
+<div onclick="selectOption('courseDropdown','courseInput',this.innerText)">Online Executive MBA</div>
+<div onclick="selectOption('courseDropdown','courseInput',this.innerText)">Online Dual MBA</div>
+<div onclick="selectOption('courseDropdown','courseInput',this.innerText)">Online MCA</div>
+<div onclick="selectOption('courseDropdown','courseInput',this.innerText)">Online MCom</div>
+<div onclick="selectOption('courseDropdown','courseInput',this.innerText)">Online MA</div>
+<div onclick="selectOption('courseDropdown','courseInput',this.innerText)">Online BBA</div>
+<div onclick="selectOption('courseDropdown','courseInput',this.innerText)">Online BCom</div>
+<div onclick="selectOption('courseDropdown','courseInput',this.innerText)">Online BA</div>
+<div onclick="selectOption('courseDropdown','courseInput',this.innerText)">Online BCA</div>
+</div>
+<div class="label">Select State</div>
+<div class="dropdown">
+<input id="stateInput" class="input" placeholder="Select State" onclick="toggleDropdown('stateDropdown')" readonly />
+<div class="dropdown-content" id="stateDropdown">
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Andhra Pradesh</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Arunachal Pradesh</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Assam</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Bihar</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Chhattisgarh</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Goa</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Gujarat</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Haryana</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Himachal Pradesh</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Jharkhand</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Karnataka</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Kerala</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Madhya Pradesh</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Maharashtra</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Manipur</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Meghalaya</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Mizoram</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Nagaland</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Odisha</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Punjab</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Rajasthan</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Sikkim</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Tamil Nadu</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Telangana</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Tripura</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Uttar Pradesh</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Uttarakhand</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">West Bengal</div>
+<div onclick="selectOption('stateDropdown','stateInput',this.innerText)">Delhi</div>
+</div>
+</div>
+
+<button class="submit-btn">FIND BEST UNIVERSITY</button>
+</div>
+</div>
+
+<script>
+function openModal(){document.getElementById('modal').style.display='flex'}
+function closeModal(){document.getElementById('modal').style.display='none'}
+function toggleDropdown(id){
+  let el=document.getElementById(id)
+  el.style.display = el.style.display==='block'?'none':'block'
+}
+function selectOption(dropdownId,inputId,value){
+  document.getElementById(inputId).value=value
+  document.getElementById(dropdownId).style.display='none'
+}
+window.onclick=function(e){
+  if(e.target.classList.contains('modal')) closeModal()
+}
+
+function validateName(){
+  let name=document.getElementById('nameInput').value
+  let error=document.getElementById('nameError')
+  if(name.length===0){
+    error.style.display='block'
+    error.innerText='Name is required!'
+  }else if(name.length<3){
+    error.style.display='block'
+    error.innerText='Please enter at least 3 characters.'
+  }else{
+    error.style.display='none'
+  }
+}
+
+function validateEmail(){
+  let email=document.getElementById('emailInput').value
+  let error=document.getElementById('emailError')
+  if(email.length===0){
+    error.style.display='block'
+    error.innerText='Email is required!'
+  }else if(email.length<7 || !email.includes('@')){
+    error.style.display='block'
+    error.innerText='Please enter a valid email address.'
+  }else{
+    error.style.display='none'
+  }
+}
+
+function validatePhone(){
+  let phone=document.getElementById('phoneInput').value
+  let error=document.getElementById('phoneError')
+  let regex=/^[6-9][0-9]{9}$/
+  if(phone.length===0){
+    error.style.display='block'
+    error.innerText='Mobile no. is required!'
+  }else if(!regex.test(phone)){
+    error.style.display='block'
+    error.innerText='Please enter a valid mobile number.'
+  }else{
+    error.style.display='none'
+  }
+}
+</script>
+
+</body>
+</html>
